@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>smartap pets</title>
+<meta name="theme-color" content="#1668FF">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul:#1668FF; --azul-oscuro:#0C3FA8; --rojo:#B3252A; --rojo-oscuro:#8E1B1F;
+    --verde:#1E8E3E; --crema:#FBF6EC; --tinta:#1B1B1B; --bg:var(--azul); --bg-oscuro:var(--azul-oscuro);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{font-family:'Outfit',system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:#fff;-webkit-font-smoothing:antialiased;transition:background .3s}
+  body.perdido{--bg:var(--rojo);--bg-oscuro:var(--rojo-oscuro)}
+  .app{max-width:440px;margin:0 auto;padding:28px 20px 40px;display:flex;flex-direction:column;gap:16px}
+
+  .estado{font-weight:800;font-size:38px;line-height:1;letter-spacing:.01em;text-align:center;margin:8px 0 4px;text-transform:uppercase}
+  .estado small{display:block;font-size:15px;font-weight:500;text-transform:none;letter-spacing:0;margin-top:8px;opacity:.9}
+
+  .foto{width:100%;aspect-ratio:1/1;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+  .foto img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .nombre{margin:6px 0 0}
+  .nombre h1{font-size:44px;font-weight:800;line-height:1;margin:0}
+  .nombre p{margin:6px 0 0;font-size:19px;font-weight:500;opacity:.92}
+
+  .btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:18px 16px;border-radius:16px;border:0;font:inherit;font-weight:800;font-size:19px;line-height:1.15;text-decoration:none;cursor:pointer;text-align:center}
+  .btn svg{width:30px;height:30px;flex:none}
+  .btn-wa{background:var(--verde);color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+  .btn-sec{background:#fff;color:var(--tinta);font-size:18px}
+  .btn-sec.espera{opacity:.75}
+
+  .notas{background:var(--crema);color:var(--tinta);border-radius:16px;padding:16px 18px}
+  .notas h2{margin:0 0 6px;font-size:17px;font-weight:800}
+  .notas p{margin:0;font-size:17px;line-height:1.4;font-weight:500}
+
+  .pie{text-align:center;margin-top:8px;font-size:15px;line-height:1.5;opacity:.9}
+  .marca{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-weight:800;font-size:17px;letter-spacing:.01em}
+  .marca svg{width:18px;height:18px}
+
+  .vacio{background:#fff;color:var(--tinta);border-radius:22px;padding:28px 22px;text-align:center}
+  .vacio h1{font-size:28px;margin:0 0 8px}
+  .vacio p{font-size:17px;margin:0 0 18px;line-height:1.45}
+  .vacio a{display:inline-block;background:var(--azul);color:#fff;text-decoration:none;font-weight:800;padding:14px 22px;border-radius:14px}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<main class="app" id="app">
+
+  <div id="vista" class="hidden" style="display:contents">
+    <div class="estado" id="estado"></div>
+    <div class="foto"><img id="foto" alt=""></div>
+    <div class="nombre"><h1 id="nombre"></h1><p id="vive"></p></div>
+
+    <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L4 20l1.2-4.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
+      <span id="txtWa">Avisar por WhatsApp a mi familia</span>
+    </a>
+    <button class="btn btn-sec" id="btnUbi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      <span id="txtUbi">Compartir dónde lo encontré</span>
+    </button>
+    <a class="btn btn-sec" id="btnTel" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>
+      <span>Llamar a mi familia</span>
+    </a>
+
+    <section class="notas" id="notas"><h2>Notas de mi familia</h2><p id="txtNotas"></p></section>
+
+    <div class="pie">
+      <div id="pieTxt"></div>
+      <div class="marca">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 19a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><path d="M4 19a12 12 0 0 1 24 0" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><circle cx="16" cy="21" r="3.2" fill="currentColor"/></svg>
+        smartap pets
+      </div>
+    </div>
+  </div>
+
+  <div id="sinAlta" class="vacio hidden">
+    <h1>Esta placa aún no está activada</h1>
+    <p>Si es tuya, actívala con el código privado de tu tarjeta para agregar la foto, tu WhatsApp y las notas de tu mascota.</p>
+    <a id="linkActivar" href="#">Activar mi placa</a>
+  </div>
+
+</main>
+
+<script>
+  // =====================================================================
+  //  DATOS. Mientras no exista la base de datos, las mascotas viven aquí.
+  //  Cada placa lleva grabada en el NFC:  <esta URL>?id=CODIGO
+  //  Cuando conectemos Google Sheets, esta sección se reemplaza por una
+  //  llamada a la API y nada más cambia.
+  // =====================================================================
+  const API = '';   // ← URL del Apps Script cuando exista. Vacío = usa DEMO.
+
+  const DEMO = {
+    'CIE-0001': {
+      nombre: 'Milo',
+      fracc: 'Cielo',
+      foto: 'milo.jpg',                       // ← sube milo.jpg junto a este archivo
+      whatsapp: '523222013946',              // ← número del dueño con 52 y sin espacios
+      notas: 'Soy tranquilo, pero me asustan los ruidos fuertes. No tomo medicamentos.',
+      perdido: false
+    }
+  };
+
+  const FOTO_DEFAULT = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#FBF6EC"/><g fill="#1668FF"><circle cx="70" cy="80" r="14"/><circle cx="130" cy="80" r="14"/><circle cx="48" cy="112" r="12"/><circle cx="152" cy="112" r="12"/><path d="M100 100c-26 0-44 22-44 40 0 14 12 22 24 22 8 0 14-4 20-4s12 4 20 4c12 0 24-8 24-22 0-18-18-40-44-40z"/></g></svg>');
+
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const id = (params.get('id') || '').toUpperCase();
+  const forzar = params.get('estado');   // ?estado=perdido o ?estado=normal (solo para demo)
+
+  async function cargar(){
+    if(!id){ mostrarSinAlta(); return; }
+    let m = null;
+    if(API){
+      try{ const r = await fetch(API + '?id=' + encodeURIComponent(id)); const j = await r.json(); if(j && j.nombre) m = j; }catch(e){}
+    } else { m = DEMO[id] || null; }
+    if(!m || !m.whatsapp){ mostrarSinAlta(); return; }
+    pintar(m);
+  }
+
+  function mostrarSinAlta(){
+    $('sinAlta').classList.remove('hidden'); $('vista').classList.add('hidden');
+    $('linkActivar').href = 'activar/?id=' + encodeURIComponent(id);
+  }
+
+  function pintar(m){
+    const perdido = forzar ? forzar === 'perdido' : !!m.perdido;
+    document.body.classList.toggle('perdido', perdido);
+    document.querySelector('meta[name=theme-color]').content = perdido ? '#B3252A' : '#1668FF';
+    document.title = (perdido ? 'Estoy perdido · ' : '') + m.nombre + ' · smartap pets';
+
+    $('estado').innerHTML = perdido
+      ? 'Estoy perdido<small>Mi familia me está buscando. Gracias por detenerte.</small>'
+      : 'Hola, soy ' + m.nombre + '<small>Si me ves lejos de casa, avísale a mi familia.</small>';
+    $('foto').src = m.foto || FOTO_DEFAULT; $('foto').alt = 'Foto de ' + m.nombre;
+    $('foto').onerror = () => { $('foto').onerror = null; $('foto').src = FOTO_DEFAULT; };
+    $('nombre').textContent = m.nombre;
+    $('vive').textContent = 'Vivo en ' + m.fracc;
+
+    const tel = String(m.whatsapp).replace(/\D/g,'');
+    const msg = perdido
+      ? `Hola, encontré a ${m.nombre}. Está conmigo y está bien. ¿Dónde nos vemos?`
+      : `Hola, vi a ${m.nombre} cerca de aquí y quería avisarles.`;
+    $('btnWa').href = 'https://wa.me/' + tel + '?text=' + encodeURIComponent(msg);
+    $('txtWa').textContent = perdido ? 'Avisar por WhatsApp que lo encontré' : 'Avisar por WhatsApp a mi familia';
+    $('btnTel').href = 'tel:+' + tel;
+
+    if(m.notas){ $('txtNotas').textContent = m.notas; } else { $('notas').classList.add('hidden'); }
+    $('pieTxt').innerHTML = perdido ? 'Este perro tiene familia.<br>Gracias por ayudar.' : 'Esta placa lo trae de regreso a casa.';
+
+    $('btnUbi').onclick = () => compartirUbicacion(m, tel);
+    $('vista').classList.remove('hidden');
+  }
+
+  function compartirUbicacion(m, tel){
+    const b = $('btnUbi'), t = $('txtUbi');
+    if(!navigator.geolocation){ abrirWa(tel, `Hola, encontré a ${m.nombre}. No pude compartir mi ubicación automática, te escribo dónde estoy:`); return; }
+    b.classList.add('espera'); t.textContent = 'Obteniendo ubicación…';
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        const lat = p.coords.latitude.toFixed(6), lng = p.coords.longitude.toFixed(6);
+        const maps = `https://maps.google.com/?q=${lat},${lng}`;
+        abrirWa(tel, `Hola, encontré a ${m.nombre}. Estoy aquí: ${maps}`);
+        b.classList.remove('espera'); t.textContent = 'Compartir dónde lo encontré';
+      },
+      () => {
+        abrirWa(tel, `Hola, encontré a ${m.nombre}. No pude compartir mi ubicación automática, te escribo dónde estoy:`);
+        b.classList.remove('espera'); t.textContent = 'Compartir dónde lo encontré';
+      },
+      { enableHighAccuracy:true, timeout:10000 }
+    );
+  }
+  function abrirWa(tel, texto){ window.open('https://wa.me/' + tel + '?text=' + encodeURIComponent(texto), '_blank'); }
+
+  cargar();
+</script>
+</body>
+</html>
